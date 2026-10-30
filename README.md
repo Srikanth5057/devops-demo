@@ -1,4 +1,4 @@
-# DevOps Demo: Automated Java Build and Test with Jenkins
+# DevOps Demo: Jenkins CI Pipeline and Docker
 
 A Spring Boot app with a Jenkins pipeline that builds, tests and packages the code on every push to GitHub.
 
@@ -6,7 +6,7 @@ A Spring Boot app with a Jenkins pipeline that builds, tests and packages the co
 Checkout -> Build -> Test -> Package. JUnit results are published and the JAR is archived.
 
 ## Tech
-Java 17, Spring Boot, Maven, Git/GitHub, Jenkins (running in Docker on my laptop)
+Java 17, Spring Boot, Maven, Git/GitHub, Jenkins, Docker, Docker Compose, PostgreSQL
 
 ## Pipeline (see `Jenkinsfile`)
 1. Checkout code from GitHub
@@ -35,11 +35,40 @@ Jenkins polls GitHub every 2 minutes and starts a build automatically.
 
 ![Artifact](docs/artifact.png)
 
+## Project 2: Dockerized app
+
+A multi-stage `Dockerfile` builds the JAR with Maven, then copies it into a small Java 17 runtime image. `docker-compose.yml` starts the app and a PostgreSQL database, and the app waits until the database is healthy.
+
+**Build the image**
+```
+docker build -t myapp:1.0 .
+docker run -d -p 8081:8080 --name myapp myapp:1.0
+```
+![Docker build](docs/docker-build.png)
+
+**Container running (port 8081 mapped to 8080 inside)**
+
+![docker ps](docs/docker-ps.png)
+
+**Logs and shell inside the container**
+
+![Docker logs](docs/docker-logs.png)
+
+**Docker Compose: app and database (healthy)**
+```
+docker compose up -d --build
+docker compose ps
+docker compose down
+```
+![Compose](docs/compose-ps.png)
+
 ## What I learned
 - Writing a declarative `Jenkinsfile`
 - Configuring Maven as a Jenkins tool
 - Using a failing test to verify the pipeline blocks bad code
 - Debugging a Git branch configuration error from the console log
+- Writing a multi-stage Dockerfile and a Compose file with a database health check
+- Running, inspecting and stopping containers with `docker ps`, `logs` and `exec`
 
 ## Run locally
 ```
