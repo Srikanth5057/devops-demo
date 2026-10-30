@@ -27,6 +27,10 @@ Jenkins polls GitHub every 2 minutes and starts a build automatically.
 - #3 failed: I broke a test on purpose, and the pipeline stopped before packaging
 - #5 passed: test fixed, pipeline green again
 
+**A failing test stops the pipeline (build #3 console)**
+
+![Failed test](docs/failed-test.png)
+
 **Archived JAR and test results (no failures)**
 
 ![Artifact](docs/artifact.png)
@@ -40,6 +44,6 @@ Jenkins polls GitHub every 2 minutes and starts a build automatically.
 ## Run locally
 ```
 .\mvnw clean package
-java -jar target\demo-0.0.1-SNAPSHOT.jar
+java -jar target\demo-0.0.1-SNAPSHOT.jar --server.port=8082
 ```
-Then open http://localhost:8080/hello
+Then open http://localhost:8082/hello (port 8080 is used by Jenkins)
